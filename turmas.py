@@ -24,12 +24,6 @@ class Turmas():
             'planilha': '142 - 2º MTEC ADM 2024.1 - PI'
         },
 
-        '2 MTEC LOG PORM': {
-            'turma': '2º MTEC LOG',
-            'componente': 'Processos de Organização dos Recursos e Materiais',
-            'planilha': '142 - 2º MTEC LOG 2024.1 - PORM'
-        },
-
         '2 MTEC MKT PI': {
             'turma': '2º MTEC MKT',
             'componente': 'Projeto Integrador',

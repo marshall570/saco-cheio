@@ -42,8 +42,9 @@ def processar_planilha(turma, bimestre, modo):
         dados['COMPONENTE'] = turma['componente']
         dados['PLANILHA'] = turma['planilha']
         dados['NOTA TAREFAS'] = Notas.processar_tarefas(dados, bases)
-        Notas.tratar_comportamento(dados, bases)
-        Notas.tratar_avaliacao(dados, bases)
+        Notas.tratar_atividade('RECUPERAÇÃO', dados, bases)        
+        Notas.tratar_atividade('KAHOOT', dados, bases)        
+        Notas.tratar_atividade('AVALIAÇÃO', dados, bases)        
         Notas.tratar_nota_final(dados)
         dados['MENÇÃO FINAL'] = Notas.converter_mencao(
             dados['NOTA FINAL'],
@@ -56,11 +57,12 @@ def processar_planilha(turma, bimestre, modo):
             Relatorio.gerar_relatorio(dados, bases, bimestre)
 
     if modo == 'NSA':
-        NSA.exportar_nsa(dataset, turma)
+        NSA.exportar_nsa(bimestre, dataset, turma)
 
 
 # for turma, item in Turmas.lista.items():
-#     processar_planilha(item, 1, 'Relatorio')
+#     processar_planilha(item, 2, 'NSA')
 
-processar_planilha(Turmas.lista['3 MTEC MKT PM'], 1, 'Relatorio')
+processar_planilha(Turmas.lista['1 MTEC ADM DAMPPC'], 2, 'NSA')
+
 

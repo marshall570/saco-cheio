@@ -1,32 +1,22 @@
+PORCENTAGEM_R = 45
+PORCENTAGEM_B = 65
+PORCENTAGEM_MB = 85
+
+
 class Notas():
     def converter_mencao(nota, max):
         porcentagem = (nota / max) * 100
 
-        if porcentagem < 50:
+        if porcentagem < PORCENTAGEM_R:
             mencao = 'I'
-        elif porcentagem < 70:
+        elif porcentagem < PORCENTAGEM_B:
             mencao = 'R'
-        elif porcentagem < 85:
+        elif porcentagem < PORCENTAGEM_MB:
             mencao = 'B'
         else:
             mencao = 'MB'
 
         return mencao
-
-
-    def processar_comportamento(positivos, negativos):
-        comportamento = (6.5 + (positivos * 1.5) - (negativos * 1.5))
-
-        if comportamento > 10:
-            comportamento = 10
-        elif comportamento < 0:
-            comportamento = 0
-
-        if comportamento != 0:
-            comportamento = comportamento / 10
-
-        return comportamento
-
 
     def processar_tarefas(dados, bases):
         nota_tarefas = 0
@@ -49,51 +39,35 @@ class Notas():
 
         return nota_tarefas
 
+    def processar_atividade(atividade, dados, bases):
+        if dados[atividade] != 'NA':
+            nota = float(dados[atividade])
 
-    def processar_avaliacao(dados, bases):
-        if dados['AVALIAÇÃO'] != 'NA':
-            nota_avaliacao = float(dados['AVALIAÇÃO'])
-
-            dados['MENÇÃO - AVALIAÇÃO'] = Notas.converter_mencao(
-                nota_avaliacao,
-                float(bases['MAX AVALIAÇÃO'])
+            dados[f'MENÇÃO - {atividade}'] = Notas.converter_mencao(
+                nota,
+                float(bases[f'MAX {atividade}'])
             )
         else:
-            nota_avaliacao = 0
-            dados['MENÇÃO - AVALIAÇÃO'] = 'NA'
+            nota = 0
+            dados[f'MENÇÃO - {atividade}'] = 'NA'
 
-        return nota_avaliacao
+        return nota
 
-
-    def tratar_comportamento(dados, bases):
-        if 'COMPORTAMENTO' in dados:
-            dados['POSITIVOS'] = dados['COMPORTAMENTO'].count('+')
-            dados['NEGATIVOS'] = dados['COMPORTAMENTO'].count('-')
-
-            dados['COMPORTAMENTO'] = Notas.processar_comportamento(
-                dados['POSITIVOS'],
-                dados['NEGATIVOS']
-            )
-            dados['MENÇÃO - COMPORTAMENTO'] = Notas.converter_mencao(
-                float(dados['COMPORTAMENTO']),
-                float(bases['MAX COMPORTAMENTO'])
-            )
+    def tratar_atividade(atividade, dados, bases):
+        if atividade in dados:
+            dados[f'NOTA {atividade}'] = Notas.processar_atividade(
+                atividade, dados, bases)
         else:
             return False
-
-
-    def tratar_avaliacao(dados, bases):
-        if 'AVALIAÇÃO' in dados:
-            dados['NOTA AVALIAÇÃO'] = Notas.processar_avaliacao(dados, bases)
-        else:
-            return False
-
 
     def tratar_nota_final(dados):
         dados['NOTA FINAL'] = float(dados['NOTA TAREFAS'])
 
-        if 'COMPORTAMENTO' in dados:
-            dados['NOTA FINAL'] += float(dados['COMPORTAMENTO'])
-
         if 'NOTA AVALIAÇÃO' in dados:
             dados['NOTA FINAL'] += float(dados['NOTA AVALIAÇÃO'])
+
+        if 'RECUPERAÇÃO' in dados:
+            dados['NOTA FINAL'] += float(dados['NOTA RECUPERAÇÃO'])
+
+        if 'KAHOOT' in dados:
+            dados['NOTA FINAL'] += float(dados['NOTA KAHOOT'])

@@ -3,10 +3,11 @@ import pandas
 import os
 import logging
 
+
 class NSA():
-    def exportar_nsa(dados, turma):
+    def exportar_nsa(bimestre, dados, turma):
         try:
-            path = os.path.expanduser('~') + '/Documentos/Etec/Planilhas/NSA'
+            path = os.path.expanduser('~') + f'/Documentos/Etec/Planilhas/NSA/{bimestre}_BIM'
 
             os.makedirs(path, exist_ok=True)
 
@@ -21,7 +22,7 @@ class NSA():
         except Exception as error:
             logging.critical(error)
 
-    
+
 def colunas_nsa(dados):
     colunas = ['RM', 'NOME']
 
@@ -37,6 +38,12 @@ def colunas_nsa(dados):
 
     if 'MENÇÃO - AVALIAÇÃO' in dados:
         colunas.append('MENÇÃO - AVALIAÇÃO')
+
+    if 'MENÇÃO - RECUPERAÇÃO' in dados:
+        colunas.append('MENÇÃO - RECUPERAÇÃO')
+
+    if 'MENÇÃO - KAHOOT' in dados:
+        colunas.append('MENÇÃO - KAHOOT')
 
     colunas.append('MENÇÃO FINAL')
     colunas.append('NOTA FINAL')
